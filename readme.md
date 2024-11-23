@@ -1,21 +1,32 @@
-# Image to ASCII/Binary Art Generator
+# Enhanced ASCII Art Generator
 
 [![Python Version](https://img.shields.io/badge/python-3.x-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Dependencies](https://img.shields.io/badge/dependencies-numpy%20|%20pillow-orange.svg)](https://pypi.org/project/numpy/)
 
-A Python-based command-line tool that converts images into ASCII or binary art. This project provides two separate scripts for generating either ASCII art using various characters (`@%#*+=-:. `) or binary art using 1's and 0's.
+A sophisticated Python-based command-line tool that converts images into ASCII art using various character sets. This enhanced version offers multiple character sets, edge enhancement, and advanced background processing capabilities.
 
 ## Features
 
-- Convert images to ASCII or binary art
-- Maintain aspect ratio during conversion
+- Multiple character set options:
+  - Standard (`@%#*+=-:. `)
+  - Detailed (`$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^'. `)
+  - Simple (`#@%-. `)
+  - Binary (`10`)
+  - Numbers (`8846923570`)
+  - Blocks (`█▆▄▃▂▁ `)
+  - Blocks2 (`██▛▌▖  `)
+  - Letters (`MWBHNXKAVREDCJLITP@SZFQUG#=+<>~^",:. `)
+  - Custom (user-defined character set)
+- Edge enhancement with adjustable factors
+- Intelligent border cleanup
+- Background detection and removal
+- Character-set-specific optimizations
+- Aspect ratio preservation
 - Adjustable output width
 - Background adjustment options (bright, dark, or none)
 - Customizable background tolerance
-- Support for different image formats (PNG, JPG, etc.)
-- Background removal capabilities
-- Custom fill character option for background
+- Support for various image formats (PNG, JPG, etc.)
 
 ## Requirements
 
@@ -29,16 +40,8 @@ pip install numpy Pillow
 
 ## Usage
 
-### ASCII Art Generator
-
 ```bash
-python ascii_art.py -i <image_path> -o <output_file> [-w width] [-b bg_adjust] [-t tolerance]
-```
-
-### Binary Art Generator
-
-```bash
-python binary_art.py -i <image_path> -o <output_file> [-w width] [-b bg_adjust] [-t tolerance]
+python ascii_art.py -i <image_path> -o <output_file> [options]
 ```
 
 ### Arguments
@@ -50,8 +53,8 @@ python binary_art.py -i <image_path> -o <output_file> [-w width] [-b bg_adjust] 
 | Width | `-w` | `--width` | Width of the output art | 100 |
 | Background Adjustment | `-b` | `--bg_adjust` | Background adjustment type (`bright`, `dark`, `none`) | none |
 | Tolerance | `-t` | `--tolerance` | Tolerance for background color removal | 30 |
-| Background Tolerance | N/A | `--bg_tolerance` | Tolerance for determining background pixels | 150 |
-| Fill Character | N/A | `--fill_char` | Character to fill background with if bg_adjust is "none" | space |
+| Character Set | `-c` | `--char_set` | Character set to use (`standard`, `detailed`, `simple`, `binary`, `numbers`, `blocks`, `blocks2`, `letters`, or custom string) | standard |
+---
 
 ## Examples
 
@@ -60,9 +63,14 @@ Generate ASCII art with default settings:
 python ascii_art.py -i path/to/image.jpg -o output.txt
 ```
 
-Generate Binary art with custom width and dark background:
+Generate ASCII art with detailed character set and edge enhancement:
 ```bash
-python binary_art.py -i path/to/image.png -o output.txt -w 150 -b dark
+python ascii_art.py -i path/to/image.png -o output.txt -w 150 -c detailed
+```
+
+Generate block-style ASCII art with dark background:
+```bash
+python ascii_art.py -i path/to/image.jpg -o output.txt -c blocks -b dark
 ```
 
 ## Technical Details
@@ -70,20 +78,21 @@ python binary_art.py -i path/to/image.png -o output.txt -w 150 -b dark
 ### Image Processing Pipeline
 
 1. **Image Loading**: Opens and validates the input image
-2. **Resizing**: Maintains aspect ratio while resizing to desired width
-3. **Grayscale Conversion**: Converts image to grayscale for processing
-4. **Pixel Mapping**: 
-   - ASCII: Maps pixels to characters based on intensity
-   - Binary: Maps pixels to 1's and 0's based on threshold
-5. **Background Processing**: Applies background adjustments if specified
-6. **Output Generation**: Formats and saves the final art to a text file
+2. **Edge Enhancement**: Applies edge detection and sharpening (if enabled)
+3. **Resizing**: Maintains aspect ratio while resizing to desired width
+4. **Grayscale Conversion**: Converts image to grayscale for processing
+5. **Background Detection**: Intelligent background detection based on character set
+6. **Pixel Mapping**: Maps pixels to characters with set-specific optimizations
+7. **Border Cleanup**: Advanced edge cleaning with character-set-specific handling
+8. **Output Generation**: Formats and saves the final art to a text file
 
-### Functions
+### Key Functions
 
-#### Common to Both Scripts:
-- `resize_image(image, new_width=100)`: Resizes while maintaining aspect ratio
-- `grayscale_image(image)`: Converts to grayscale
-- `map_pixels_to_ascii/binary(image, bg_adjust, bg_tolerance, fill_char)`: Maps pixels to characters
+- `enhance_edges()`: Applies edge enhancement and sharpening
+- `detect_background()`: Character-set-aware background detection
+- `adjust_for_char_set()`: Optimizes pixel values for different character sets
+- `clean_edges_advanced()`: Intelligent border cleanup
+- `map_pixels_to_ascii()`: Enhanced pixel-to-character mapping
 
 ## Known Limitations
 
@@ -91,6 +100,7 @@ python binary_art.py -i path/to/image.png -o output.txt -w 150 -b dark
 - Output quality depends on the input image contrast
 - Some detail loss is expected during conversion
 - Background removal may not be perfect for complex images
+- Edge enhancement may produce artifacts on certain images
 
 ## Contributing
 
@@ -110,7 +120,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - NumPy for efficient array operations
 
 ## Contact
-> This code isn't perfect yet, but if you know how to improve it, I'd be happy to see your suggestions.
 
 For bug reports and feature requests, please open an issue on the project repository.
 
